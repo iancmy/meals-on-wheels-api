@@ -1,5 +1,5 @@
-// Using positionstack.com API
-// https://positionstack.com/documentation
+// Using opencage-api-client to get location data
+// https://www.npmjs.com/package/opencage-api-client
 import express from "express";
 import dotenv from "dotenv";
 import opencage from "opencage-api-client";
