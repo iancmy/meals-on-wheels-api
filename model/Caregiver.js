@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import Member from "./Member";
 import sequence from "mongoose-sequence";
 
-const memberSchema = new mongoose.Schema({
+const caregiverSchema = new mongoose.Schema({
   _id: {
     type: Number,
     required: true,
@@ -10,10 +11,8 @@ const memberSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lastName: String,
-  birthdate: {
-    type: Date,
-    required: true,
+  lastName: {
+    type: String,
   },
   emailAddress: {
     type: String,
@@ -45,26 +44,26 @@ const memberSchema = new mongoose.Schema({
     },
     required: true,
   },
-  contactNumber: {
-    type: String,
-    default: "",
-  },
-  dietaryRestrictions: {
-    type: [String],
-    default: [],
-  },
-  foodAllergies: {
-    type: [String],
-    default: [],
-  },
   password: {
     type: String,
     required: true,
   },
+  contactNumber: {
+    type: String,
+    default: "",
+  },
+  dependentMember: {
+    type: Member,
+    default: "",
+  },
+  relationshipToMember: {
+    type: String,
+    default: "",
+  },
 });
 
-memberSchema.plugin(sequence, { inc_field: "_id" });
+caregiverSchema.plugin(sequence, { inc_field: "_id" });
 
-const Member = mongoose.model("Member", memberSchema);
+const Caregiver = mongoose.model("Caregiver", caregiverSchema);
 
-export default Member;
+export default Caregiver;

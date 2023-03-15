@@ -1,18 +1,13 @@
 import mongoose from "mongoose";
 import sequence from "mongoose-sequence";
 
-const memberSchema = new mongoose.Schema({
+const partnerSchema = new mongoose.Schema({
   _id: {
     type: Number,
     required: true,
   },
-  firstName: {
+  businessName: {
     type: String,
-    required: true,
-  },
-  lastName: String,
-  birthdate: {
-    type: Date,
     required: true,
   },
   emailAddress: {
@@ -45,26 +40,26 @@ const memberSchema = new mongoose.Schema({
     },
     required: true,
   },
-  contactNumber: {
-    type: String,
-    default: "",
-  },
-  dietaryRestrictions: {
-    type: [String],
-    default: [],
-  },
-  foodAllergies: {
-    type: [String],
-    default: [],
-  },
   password: {
     type: String,
     required: true,
   },
+  contactNumber: {
+    type: String,
+    default: "",
+  },
+  daysAvailable: {
+    type: [Number],
+    default: [],
+  },
+  serviceType: {
+    type: String,
+    enum: ["Home Health Care", "Transportation Services", "Social Services"],
+  },
 });
 
-memberSchema.plugin(sequence, { inc_field: "_id" });
+partnerSchema.plugin(sequence, { inc_field: "_id" });
 
-const Member = mongoose.model("Member", memberSchema);
+const Partner = mongoose.model("Partner", partnerSchema);
 
-export default Member;
+export default Partner;

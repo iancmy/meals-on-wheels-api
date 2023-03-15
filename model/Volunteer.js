@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import sequence from "mongoose-sequence";
 
-const memberSchema = new mongoose.Schema({
+const volunteerSchema = new mongoose.Schema({
   _id: {
     type: Number,
     required: true,
@@ -10,9 +10,8 @@ const memberSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lastName: String,
-  birthdate: {
-    type: Date,
+  lastName: {
+    type: String,
     required: true,
   },
   emailAddress: {
@@ -45,26 +44,26 @@ const memberSchema = new mongoose.Schema({
     },
     required: true,
   },
-  contactNumber: {
-    type: String,
-    default: "",
-  },
-  dietaryRestrictions: {
-    type: [String],
-    default: [],
-  },
-  foodAllergies: {
-    type: [String],
-    default: [],
-  },
   password: {
     type: String,
     required: true,
   },
+  contactNumber: {
+    type: String,
+    default: "",
+  },
+  daysAvailable: {
+    type: [Number],
+    default: [],
+  },
+  serviceProvided: {
+    type: String,
+    enum: ["Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"],
+  },
 });
 
-memberSchema.plugin(sequence, { inc_field: "_id" });
+volunteerSchema.plugin(sequence, { inc_field: "_id" });
 
-const Member = mongoose.model("Member", memberSchema);
+const Volunteer = mongoose.model("Volunteer", volunteerSchema);
 
-export default Member;
+export default Volunteer;
