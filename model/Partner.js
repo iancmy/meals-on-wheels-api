@@ -49,12 +49,22 @@ const partnerSchema = new mongoose.Schema({
     default: "",
   },
   daysAvailable: {
-    type: [Number],
-    default: [],
+    type: [String],
+    enum: [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ],
+    required: true,
   },
   serviceType: {
     type: String,
-    enum: ["Home Health Care", "Transportation Services", "Social Services"],
+    enum: ["Home Health Care", "Transportation Services", "Social Services"], // Shouldn't it be "restaurant" or "grocery"?
+    required: true,
   },
 });
 

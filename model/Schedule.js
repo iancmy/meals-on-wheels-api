@@ -14,7 +14,16 @@ const scheduleSchema = new mongoose.Schema({
   },
   days: {
     type: [String],
-    default: [],
+    required: true,
+    enum: [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ],
   },
   dietaryRestrictions: {
     type: [String],

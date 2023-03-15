@@ -17,7 +17,7 @@ const caregiverSchema = new mongoose.Schema({
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -53,8 +53,10 @@ const caregiverSchema = new mongoose.Schema({
     default: "",
   },
   dependentMember: {
-    type: Member,
+    type: mongoose.SchemaTypes.ObjectId, // Should be just the ID of the member
     default: "",
+    required: true, // Should be required
+    ref: "Member", // Reference to the Member model
   },
   relationshipToMember: {
     type: String,

@@ -8,14 +8,23 @@ const donationSchema = new mongoose.Schema({
   },
   donorName: {
     type: String,
+    default: "anonymous", // Default to "anonymous"
   },
   donationType: {
     type: String,
-    enum: ["Cash Donations", "Corporate Donations", "Gifts", "Volunteer Service Donations", "Fundraising Event Donations", "Government Grants"],
+    enum: [
+      "Cash Donations",
+      "Corporate Donations",
+      "Gifts",
+      "Volunteer Service Donations",
+      "Fundraising Event Donations",
+      "Government Grants",
+    ], // Shouldn't it be "one-time", "monthly", or "annual"?
   },
   Amount: {
     type: Number,
-    default: 0.0,
+    // default: 0.0,
+    required: true, // Should be required
   },
   emailAddress: {
     type: String,
@@ -29,6 +38,7 @@ const donationSchema = new mongoose.Schema({
     },
     lowercase: true,
   },
+  // Do we need to store the address of the donor?
   address: {
     type: {
       _id: false,
@@ -50,9 +60,13 @@ const donationSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  paymentMethod: {},
+  paymentMethod: {
+    type: String,
+    enum: ["Cash", "Check", "Credit Card", "Debit Card", "Paypal"],
+  },
   comment: {
     type: String,
+    default: "",
   },
 });
 

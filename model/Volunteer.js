@@ -58,7 +58,7 @@ const volunteerSchema = new mongoose.Schema({
   },
   serviceProvided: {
     type: String,
-    enum: ["Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"],
+    enum: ["Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"], // Shouldn't it be "delivery" or "logistics"
   },
 });
 
