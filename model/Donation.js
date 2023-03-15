@@ -1,19 +1,21 @@
 import mongoose from "mongoose";
 import sequence from "mongoose-sequence";
 
-const memberSchema = new mongoose.Schema({
+const donationSchema = new mongoose.Schema({
   _id: {
     type: Number,
     required: true,
   },
-  firstName: {
+  donorName: {
     type: String,
-    required: true,
   },
-  lastName: String,
-  birthdate: {
-    type: Date,
-    required: true,
+  donationType: {
+    type: String,
+    enum: ["Cash Donations", "Corporate Donations", "Gifts", "Volunteer Service Donations", "Fundraising Event Donations", "Government Grants"],
+  },
+  Amount: {
+    type: Number,
+    default: 0.0,
   },
   emailAddress: {
     type: String,
@@ -43,28 +45,19 @@ const memberSchema = new mongoose.Schema({
         default: null,
       },
     },
-    required: true,
   },
   contactNumber: {
     type: String,
     default: "",
   },
-  dietaryRestrictions: {
-    type: [String],
-    default: [],
-  },
-  foodAllergies: {
-    type: [String],
-    default: [],
-  },
-  password: {
+  paymentMethod: {},
+  comment: {
     type: String,
-    required: true,
   },
 });
 
-memberSchema.plugin(sequence, { inc_field: "_id" });
+donationSchema.plugin(sequence, { inc_field: "_id" });
 
-const Member = mongoose.model("Member", memberSchema);
+const Donation = mongoose.model("Donation", donationSchema);
 
-export default Member;
+export default Donation;
