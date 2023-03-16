@@ -1,188 +1,126 @@
 # TO-DO
 
----
-
----
-
 ## Main
 
-[x] Connect to database
-[x] Use JSON middleware for parsing request body
-[x] Allow CORS and with credentials
-[ ] Define all routes
-
----
-
----
+- [x] Connect to database
+- [x] Use JSON middleware for parsing request body
+- [x] Allow CORS and with credentials
+- [ ] Define all routes
 
 ## Models
 
----
-
 ### Admin
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Member
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Caregiver
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Volunteer
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Partner
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Schedule
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Delivery
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### Donation
 
-[ ] Define schema
-
----
+- [ ] Define schema
 
 ### RefreshToken
 
-[ ] Define schema
-
----
-
----
+- [ ] Define schema
 
 ## Controllers
 
----
-
 ### Location API controller
 
-[ ] Address to coordinates
-[ ] Coordinates to address
-
----
+- [x] Address to coordinates
+- [x] Coordinates to address
 
 ### User controller
 
-[ ] Log in
-[ ] Refresh token
-[ ] Get user details
-[ ] Log out
-
----
+- [x] Log in
+- [x] Refresh token
+- [x] Get user details
+- [x] Log out
 
 ### Member controller
 
-[ ] Member sign up
-[ ] Update details
-
----
+- [ ] Member sign up
+- [ ] Update details
 
 ### Caregiver controller
 
-[ ] Caregiver sign up
-[ ] Update details
-
----
+- [ ] Caregiver sign up
+- [ ] Update details
 
 ### Volunteer controller
 
-[ ] Volunteer sign up
-[ ] Update details
-
----
+- [ ] Volunteer sign up
+- [ ] Update details
 
 ### Partner controller
 
-[ ] Partner sign up
-[ ] Update details
-
----
+- [ ] Partner sign up
+- [ ] Update details
 
 ### Admin controller
 
-[ ] Get users
-[ ] Validate user
-[ ] Create new users
-
-> Admin
-> Member
-> Caregiver
-> Volunteer
-> Partner
-
-[ ] Schedules CRUD
-[ ] Delivery CRUD
-
----
+- [ ] Get users
+- [ ] Validate user
+- [ ] Create new users
+  - [ ] Admin
+  - [ ] Member
+  - [ ] Caregiver
+  - [ ] Volunteer
+  - [ ] Partner
+- [ ] Schedules CRUD
+- [ ] Delivery CRUD
 
 ### Donation controller
 
-[ ] New donation
-
----
-
----
+- [ ] New donation
 
 ## Service
 
 ### Authentication service
 
-[ ] Create access token
-[ ] Create refresh token
-[ ] Authenticate user middleware
-
----
+- [x] Create access token
+- [x] Create refresh token
+- [x] Authenticate user middleware
 
 ### Location service
 
-[ ] Get distance
-[ ] Address to coordinates
-[ ] Coordinates to address
-
----
+- [x] Get distance
+- [x] Address to coordinates
+- [x] Coordinates to address
 
 ### Encryption service
 
-[ ] Encrypt password middleware
-
----
+- [x] Encrypt password middleware
 
 ### User service
 
-[ ] Get user type middleware
-[ ] Check password middleware
-[ ] Get user details middleware
-
----
-
----
+- [x] Get user type middleware
+- [x] Check password middleware
+- [x] Get user details middleware
 
 ## Testing
 
-[ ] Test authentication
-[ ] Test location API
+- [ ] Test authentication
+- [ ] Test location API
