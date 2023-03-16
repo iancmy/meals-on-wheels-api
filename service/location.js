@@ -1,3 +1,10 @@
+import dotenv from "dotenv";
+import opencage from "opencage-api-client";
+
+dotenv.config();
+
+const { LOCATION_API_KEY } = process.env;
+
 export function getCoordinates(address) {
   return new Promise((resolve, reject) => {
     opencage
