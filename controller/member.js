@@ -1,45 +1,83 @@
 import express from "express";
 import Member from "../model/Member.js";
 
+import { auth } from "../service/auth.js";
+import { encryptPassword } from "../service/passwordEncrypt.js";
+import { checkUserExists } from "../service/user.js";
+
 const router = express.Router();
 
-// TODO: Add authentication middleware
-// For admins only
-router.get("/", async (req, res) => {
-  try {
-    const members = await Member.find();
-    res.status(200).json(members);
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.post("/signup", [encryptPassword], async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    birthdate,
+    emailAddress,
+    address,
+    contactNumber,
+    dietaryRestrictions,
+    foodAllergies,
+    password,
+  } = req.body;
 
-router.post("/signup", async (req, res) => {
+  // Check if user exists
+  const userExists = await checkUserExists(emailAddress);
+  if (userExists) {
+    return res.status(400).json({ msg: "User already exists." });
+  }
+
   try {
     await Member.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      birthdate: req.body.birthdate,
-      emailAddress: req.body.emailAddress,
+      firstName,
+      lastName,
+      birthdate,
+      emailAddress,
       address: {
-        fullAddress: req.body.address,
+        fullAddress: address,
       },
-      contactNumber: req.body.contactNumber,
-      dietaryRestrictions: req.body.dietaryRestrictions,
-      foodAllergies: req.body.foodAllergies,
-      password: req.body.password,
+      contactNumber,
+      dietaryRestrictions,
+      foodAllergies,
+      password,
+    });
+
+    res.status(201).json({
+      msg: "Member sign up successful!",
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ msg: err });
   }
-
-  res.status(201).json({
-    message: "Member created!",
-  });
 });
 
-// TODO: Login route
+router.put("/update", [auth], async (req, res) => {
+  const { userId } = req;
 
-// TODO: Update profile route
+  try {
+    const user = await Member.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found." });
+    }
+
+    await Member.updateOne(
+      { emailAddress: user.emailAddress },
+      {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        birthdate: req.body.birthdate,
+        emailAddress: req.body.emailAddress,
+        address: {
+          fullAddress: req.body.address,
+        },
+        contactNumber: req.body.contactNumber,
+        dietaryRestrictions: req.body.dietaryRestrictions,
+        foodAllergies: req.body.foodAllergies,
+        password: req.body.password,
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ msg: err });
+  }
+});
 
 export default router;

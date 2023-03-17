@@ -1,8 +1,10 @@
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 // Import routes
+import userRoutes from "./controller/user.js";
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
 
@@ -33,9 +35,13 @@ mongoose
 // Middleware for parsing JSON data in request body
 app.use(express.json());
 
+// Allow cross-origin requests and allow credentials
+app.use(cors({ origin: "*", credentials: true }));
+
 // Set up routes
-app.use("/api/member", memberRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/location", locationRoutes);
+app.use("/api/member", memberRoutes);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
