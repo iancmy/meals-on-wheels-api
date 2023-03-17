@@ -5,7 +5,10 @@ const memberSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lastName: String,
+  lastName: {
+    type: String,
+    default: "",
+  },
   birthdate: {
     type: Date,
     required: true,
@@ -62,11 +65,12 @@ const memberSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 

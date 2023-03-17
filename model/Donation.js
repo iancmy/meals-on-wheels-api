@@ -7,9 +7,10 @@ const donationSchema = new mongoose.Schema({
   },
   donationType: {
     type: String,
-    enum: ["One Time", "Monthly", "Annual"],
+    enum: ["one-time", "weekly", "monthly", "quarterly", "annually"],
+    required: true,
   },
-  Amount: {
+  amount: {
     type: Number,
     required: true,
   },
@@ -27,23 +28,21 @@ const donationSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ["Cash", "Check", "Credit Card", "Debit Card", "Paypal"],
+    enum: ["cash", "check", "debit", "credit", "paypal"],
+    required: true,
   },
   comment: {
     type: String,
     default: "",
   },
-  validated: {
-    type: Boolean,
-    default: false,
-  },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 

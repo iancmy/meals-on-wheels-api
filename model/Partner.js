@@ -44,21 +44,25 @@ const partnerSchema = new mongoose.Schema({
     default: "",
   },
   daysAvailable: {
-    type: [String],
-    enum: [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
+    type: [
+      {
+        type: String,
+        enum: [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ],
+      },
     ],
     required: true,
   },
   serviceType: {
     type: String,
-    enum: ["Restaurant", "Grocery"],
+    enum: ["restaurant", "grocery"],
     required: true,
   },
   validated: {
@@ -67,11 +71,12 @@ const partnerSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 

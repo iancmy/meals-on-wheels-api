@@ -7,6 +7,7 @@ const adminSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
+    default: "",
   },
   emailAddress: {
     type: String,
@@ -42,7 +43,7 @@ const adminSchema = new mongoose.Schema({
     type: Date,
     default: () => Date.now(),
   },
-  });
+});
 
 adminSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
