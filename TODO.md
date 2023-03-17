@@ -12,7 +12,7 @@
 - [x] Add "validated" field to all user models
   - Boolean
   - default: false
-- [ ] Add createdAt and updatedAt field to all models
+- [x] Add createdAt and updatedAt field to all models
   - Date
   - default: () => Date.now()
   - immutable (only for createdAt field)
