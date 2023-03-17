@@ -9,7 +9,7 @@
 
 ## Models
 
-- [ ] Add "validated" field to all user models
+- [x] Add "validated" field to all user models
   - Boolean
   - default: false
 - [ ] Add createdAt and updatedAt field to all models
@@ -21,24 +21,24 @@
 
 ### Admin
 
-- [ ] Define schema
-  - [ ] firstName
+- [x] Define schema
+  - [x] firstName
     - String
     - Required
-  - [ ] lastName
+  - [x] lastName
     - String
     - default: ""
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] password
+  - [x] password
     - String
     - Required
-  - [ ] contactNumber
+  - [x] contactNumber
     - String
     - default: ""
-  - [ ] permissions
+  - [x] permissions
     - [String]
     - Required
     - enum
@@ -48,20 +48,20 @@
 
 ### Member
 
-- [ ] Define schema
-  - [ ] firstName
+- [x] Define schema
+  - [x] firstName
     - String
     - Required
-  - [ ] lastName
+  - [x] lastName
     - String
-  - [ ] birthdate
+  - [x] birthdate
     - Date
     - Required
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] address
+  - [x] address
     - Required
     - Object {}
       - fullAddress
@@ -73,32 +73,32 @@
       - long
         - Number
         - default: null
-  - [ ] contactNumber
+  - [x] contactNumber
     - String
     - default: ""
-  - [ ] dietaryRestrictions
+  - [x] dietaryRestrictions
     - [String]
     - default: []
-  - [ ] foodAllergies
+  - [x] foodAllergies
     - [String]
     - default: []
-  - [ ] password
+  - [x] password
     - String
     - Required
 
 ### Caregiver
 
-- [ ] Define schema
-  - [ ] firstName
+- [x] Define schema
+  - [x] firstName
     - String
     - Required
-  - [ ] lastName
+  - [x] lastName
     - String
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] address
+  - [x] address
     - Required
     - Object {}
       - fullAddress
@@ -110,33 +110,33 @@
       - long
         - Number
         - default: null
-  - [ ] contactNumber
+  - [x] contactNumber
     - String
     - default: ""
-  - [ ] dependentMember
+  - [x] dependentMember
     - ObjectId
     - Required
     - ref: "Member"
-  - [ ] relationshipToMember
+  - [x] relationshipToMember
     - String
     - Required
-  - [ ] password
+  - [x] password
     - String
     - Required
 
 ### Volunteer
 
-- [ ] Define schema
-  - [ ] firstName
+- [x] Define schema
+  - [x] firstName
     - String
     - Required
-  - [ ] lastName
+  - [x] lastName
     - String
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] address
+  - [x] address
     - Required
     - Object {}
       - fullAddress
@@ -148,35 +148,35 @@
       - long
         - Number
         - default: null
-  - [ ] contactNumber
+  - [x] contactNumber
     - String
     - default: ""
-  - [ ] daysAvailable
+  - [x] daysAvailable
     - [String]
     - Required
     - enum
       - all days of the week (monday, tuesday, ..., sunday)
-  - [ ] serviceProvided
+  - [x] serviceProvided
     - [String]
     - Required
     - enum
       - delivery
       - logistics
-  - [ ] password
+  - [x] password
     - String
     - Required
 
 ### Partner
 
-- [ ] Define schema
-  - [ ] businessName
+- [x] Define schema
+  - [x] businessName
     - String
     - Required
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] address
+  - [x] address
     - Required
     - Object {}
       - fullAddress
@@ -188,54 +188,56 @@
       - long
         - Number
         - default: null
-  - [ ] contactNumber
+  - [x] contactNumber
     - String
     - default: ""
-  - [ ] daysAvailable
+  - [x] daysAvailable
     - [String]
     - Required
     - enum
       - all days of the week (monday, tuesday, ..., sunday)
-  - [ ] serviceType
+  - [x] serviceType
     - [String]
     - Required
     - enum
       - restaurant (hot meals)
       - grocery (frozen goods)
-  - [ ] password
+  - [x] password
     - String
     - Required
 
 ### Schedule
 
-- [ ] Define schema
-  - [ ] weekNumber
+- [x] Define schema
+  - [x] weekNumber
     - Number
     - Required
-  - [ ] days
+    - min: 1
+    - max: 52
+  - [x] days
     - [String]
     - Required
     - enum
       - all days of the week (monday, tuesday, ..., sunday)
-  - [ ] dietaryRestrictions
+  - [x] dietaryRestrictions
     - [String]
     - default: []
-  - [ ] partner
+  - [x] partner
     - ObjectId
     - Required
     - ref: "Partner"
-  - [ ] createdBy
+  - [x] createdBy
     - ObjectId
     - Required
     - ref: "Admin"
 
 ### Delivery
 
-- [ ] Define schema
-  - [ ] deliveryDate
-    - Data
+- [x] Define schema
+  - [x] deliveryDate
+    - Date
     - Required
-  - [ ] status
+  - [x] status
     - String
     - Required
     - enum
@@ -243,55 +245,52 @@
       - cancelled
       - rescheduled
       - completed
-  - [ ] dietaryRestrictions
+  - [x] dietaryRestrictions
     - [String]
     - default: []
-  - [ ] deliveredFor
+  - [x] deliveredFor
     - ObjectId
     - Required
     - ref: "Member"
-  - [ ] representative
+  - [x] caregiver
     - ObjectId
     - default: null
     - ref: "Caregiver"
-  - [ ] deliveredBy
+  - [x] deliveredBy
     - ObjectId
     - Required
     - ref: "Volunteer"
-  - [ ] partner
+  - [x] partner
     - ObjectId
     - Required
     - ref: "Partner"
-  - [ ] comment
+  - [x] comment
     - String
     - default: ""
 
 ### Donation
 
-- [ ] Define schema
-  - [ ] donorName
+- [x] Define schema
+  - [x] donorName
     - String
     - default: "anonymous"
-  - [ ] donationType
+  - [x] donationType
     - String
     - Required
     - enum
-      - oneTime
+      - one-time
       - weekly
       - monthly
       - quarterly
       - annual
-  - [ ] amount
+  - [x] amount
     - Number
     - Required
-  - [ ] contactNumber
-    - String
-    - default: ""
-  - [ ] emailAddress
+  - [x] emailAddress
     - String
     - Required
     - Custom validation for email
-  - [ ] paymentMethod
+  - [x] paymentMethod
     - String
     - Required
     - enum
@@ -300,7 +299,7 @@
       - debit
       - credit
       - paypal
-  - [ ] comment
+  - [x] comment
     - String
     - default: ""
 

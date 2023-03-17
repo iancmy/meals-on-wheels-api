@@ -3,6 +3,7 @@ import Member from "../model/Member.js";
 
 import { auth } from "../service/auth.js";
 import { encryptPassword } from "../service/passwordEncrypt.js";
+import { checkUserExists } from "../service/user.js";
 
 const router = express.Router();
 
@@ -18,6 +19,12 @@ router.post("/signup", [encryptPassword], async (req, res) => {
     foodAllergies,
     password,
   } = req.body;
+
+  // Check if user exists
+  const userExists = await checkUserExists(emailAddress);
+  if (userExists) {
+    return res.status(400).json({ msg: "User already exists." });
+  }
 
   try {
     await Member.create({

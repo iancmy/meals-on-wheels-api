@@ -6,6 +6,21 @@ import Member from "../model/Member.js";
 import Partner from "../model/Partner.js";
 import Volunteer from "../model/Volunteer.js";
 
+// Helper function to check if user exists
+export const checkUserExists = async (emailAddress) => {
+  try {
+    return (
+      (await Member.exists({ emailAddress })) ||
+      (await Caregiver.exists({ emailAddress })) ||
+      (await Volunteer.exists({ emailAddress })) ||
+      (await Partner.exists({ emailAddress })) ||
+      (await Admin.exists({ emailAddress }))
+    );
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
 // Middleware to set user type
 export const getUserType = async (req, res, next) => {
   const { emailAddress } = req.body;
