@@ -1,39 +1,58 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
-import Admin from "./Admin";
-import Partner from "./Partner";
 
 const scheduleSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   weekNumber: {
     type: Number,
     required: true,
+    min: 1,
+    max: 52,
   },
   days: {
-    type: [String],
-    default: [],
+    type: [
+      {
+        type: String,
+        enum: [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ],
+      },
+    ],
+    required: true,
   },
   dietaryRestrictions: {
     type: [String],
     default: [],
   },
   partner: {
-    type: Partner,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Partner",
   },
   createdBy: {
-    type: Admin,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Admin",
   },
   createdAt: {
     type: Date,
+    default: () => Date.now(),
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
   },
 });
 
-scheduleSchema.plugin(sequence, { inc_field: "_id" });
+scheduleSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 
