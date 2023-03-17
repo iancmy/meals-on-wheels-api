@@ -1,26 +1,23 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 
 const donationSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   donorName: {
     type: String,
+    default: "anonymous",
   },
   donationType: {
     type: String,
-    enum: ["Cash Donations", "Corporate Donations", "Gifts", "Volunteer Service Donations", "Fundraising Event Donations", "Government Grants"],
+    enum: ["one-time", "weekly", "monthly", "quarterly", "annually"],
+    required: true,
   },
-  Amount: {
+  amount: {
     type: Number,
-    default: 0.0,
+    required: true,
   },
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -29,34 +26,30 @@ const donationSchema = new mongoose.Schema({
     },
     lowercase: true,
   },
-  address: {
-    type: {
-      _id: false,
-      fullAddress: {
-        type: String,
-        required: true,
-      },
-      lat: {
-        type: Number,
-        default: null,
-      },
-      long: {
-        type: Number,
-        default: null,
-      },
-    },
+  paymentMethod: {
+    type: String,
+    enum: ["cash", "check", "debit", "credit", "paypal"],
+    required: true,
   },
-  contactNumber: {
+  comment: {
     type: String,
     default: "",
   },
-  paymentMethod: {},
-  comment: {
-    type: String,
+  createdAt: {
+    type: Date,
+    default: () => Date.now(),
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
   },
 });
 
-donationSchema.plugin(sequence, { inc_field: "_id" });
+donationSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Donation = mongoose.model("Donation", donationSchema);
 

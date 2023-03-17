@@ -1,23 +1,18 @@
 import mongoose from "mongoose";
-import Member from "./Member";
-import sequence from "mongoose-sequence";
 
 const caregiverSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
   },
   lastName: {
     type: String,
+    default: "",
   },
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -53,16 +48,33 @@ const caregiverSchema = new mongoose.Schema({
     default: "",
   },
   dependentMember: {
-    type: Member,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Member",
   },
   relationshipToMember: {
     type: String,
-    default: "",
+    required: true,
+  },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: () => Date.now(),
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
   },
 });
 
-caregiverSchema.plugin(sequence, { inc_field: "_id" });
+caregiverSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Caregiver = mongoose.model("Caregiver", caregiverSchema);
 

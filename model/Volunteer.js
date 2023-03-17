@@ -1,23 +1,18 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 
 const volunteerSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
   },
   lastName: {
     type: String,
-    required: true,
+    default: "",
   },
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -53,16 +48,45 @@ const volunteerSchema = new mongoose.Schema({
     default: "",
   },
   daysAvailable: {
-    type: [Number],
-    default: [],
+    type: [
+      {
+        type: String,
+        enum: [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ],
+      },
+    ],
+    required: true,
   },
   serviceProvided: {
     type: String,
-    enum: ["Breakfast", "Lunch", "Dinner", "Snacks", "Beverages"],
+    enum: ["delivery", "logistics"],
+  },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: () => Date.now(),
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
   },
 });
 
-volunteerSchema.plugin(sequence, { inc_field: "_id" });
+volunteerSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Volunteer = mongoose.model("Volunteer", volunteerSchema);
 

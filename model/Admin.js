@@ -1,22 +1,18 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 
 const adminSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
   },
   lastName: {
     type: String,
+    default: "",
   },
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -33,13 +29,26 @@ const adminSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  permisions: {
+  permissions: {
     type: [String],
-    default: [],
+    enum: ["super", "admin", "logistics"],
+    required: true,
   },
-  });
+  createdAt: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
+  },
+});
 
-adminSchema.plugin(sequence, { inc_field: "_id"});
+adminSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Admin = mongoose.model("Admin", adminSchema);
 
