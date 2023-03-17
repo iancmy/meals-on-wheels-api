@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 
 const partnerSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   businessName: {
     type: String,
     required: true,
@@ -13,7 +8,7 @@ const partnerSchema = new mongoose.Schema({
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -63,12 +58,27 @@ const partnerSchema = new mongoose.Schema({
   },
   serviceType: {
     type: String,
-    enum: ["Home Health Care", "Transportation Services", "Social Services"], // Shouldn't it be "restaurant" or "grocery"?
+    enum: ["Restaurant", "Grocery"],
     required: true,
+  },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
   },
 });
 
-partnerSchema.plugin(sequence, { inc_field: "_id" });
+partnerSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Partner = mongoose.model("Partner", partnerSchema);
 

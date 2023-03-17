@@ -1,12 +1,6 @@
 import mongoose from "mongoose";
-import Member from "./Member";
-import sequence from "mongoose-sequence";
 
 const caregiverSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
@@ -53,18 +47,33 @@ const caregiverSchema = new mongoose.Schema({
     default: "",
   },
   dependentMember: {
-    type: mongoose.SchemaTypes.ObjectId, // Should be just the ID of the member
+    type: mongoose.SchemaTypes.ObjectId, 
     default: "",
-    required: true, // Should be required
-    ref: "Member", // Reference to the Member model
+    required: true,
+    ref: "Member", 
   },
   relationshipToMember: {
     type: String,
     default: "",
   },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
-caregiverSchema.plugin(sequence, { inc_field: "_id" });
+caregiverSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Caregiver = mongoose.model("Caregiver", caregiverSchema);
 

@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 import Admin from "./Admin";
 import Partner from "./Partner";
 
 const scheduleSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   weekNumber: {
     type: Number,
     required: true,
@@ -41,8 +36,6 @@ const scheduleSchema = new mongoose.Schema({
     type: Date,
   },
 });
-
-scheduleSchema.plugin(sequence, { inc_field: "_id" });
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 

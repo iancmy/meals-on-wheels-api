@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 
 const memberSchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
@@ -18,7 +13,7 @@ const memberSchema = new mongoose.Schema({
   emailAddress: {
     type: String,
     required: true,
-    validation: {
+    validate: {
       validator: function (v) {
         // validate email address
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
@@ -61,9 +56,24 @@ const memberSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
-memberSchema.plugin(sequence, { inc_field: "_id" });
+memberSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Member = mongoose.model("Member", memberSchema);
 

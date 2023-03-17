@@ -1,22 +1,24 @@
 import mongoose from "mongoose";
-import sequence from "mongoose-sequence";
 import Caregiver from "./Caregiver";
 import Member from "./Member";
 import Partner from "./Partner";
 import Volunteer from "./Volunteer";
 
 const deliverySchema = new mongoose.Schema({
-  _id: {
-    type: Number,
-    required: true,
-  },
   deliveryDate: {
     type: Date,
     required: true,
   },
   status: {
     type: String,
-    enum: ["Order Received", "Food Preparation", "Delivered", "Cancelled", "Rescheduled", "No Show"],
+    enum: [
+      "Order Received",
+      "Food Preparation",
+      "Delivered",
+      "Cancelled",
+      "Rescheduled",
+      "No Show",
+    ],
     required: true,
   },
   dietaryRestrictions: {
@@ -43,9 +45,24 @@ const deliverySchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
-deliverySchema.plugin(sequence, { inc_field: "_id" });
+deliverySchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 const Delivery = mongoose.model("Delivery", deliverySchema);
 
