@@ -4,6 +4,7 @@ import Member from "../model/Member.js";
 import { auth } from "../service/auth.js";
 import { encryptPassword } from "../service/passwordEncrypt.js";
 import { checkUserExists } from "../service/user.js";
+import { getCoordinates } from "../service/location.js";
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ router.post("/signup", [encryptPassword], async (req, res) => {
   }
 
   try {
+    // Get the coordinates of the address
+    const results = await getCoordinates(address);
+    const { lat, lng } = results[0].geometry;
+
     await Member.create({
       firstName,
       lastName,
@@ -34,6 +39,8 @@ router.post("/signup", [encryptPassword], async (req, res) => {
       emailAddress,
       address: {
         fullAddress: address,
+        lat,
+        long: lng,
       },
       contactNumber,
       dietaryRestrictions,
@@ -59,22 +66,64 @@ router.put("/update", [auth], async (req, res) => {
       return res.status(404).json({ msg: "User not found." });
     }
 
-    await Member.updateOne(
-      { emailAddress: user.emailAddress },
-      {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        birthdate: req.body.birthdate,
-        emailAddress: req.body.emailAddress,
-        address: {
-          fullAddress: req.body.address,
-        },
-        contactNumber: req.body.contactNumber,
-        dietaryRestrictions: req.body.dietaryRestrictions,
-        foodAllergies: req.body.foodAllergies,
-        password: req.body.password,
-      }
-    );
+    const {
+      firstName,
+      lastName,
+      birthdate,
+      emailAddress,
+      address,
+      contactNumber,
+      dietaryRestrictions,
+      foodAllergies,
+    } = req.body;
+
+    // Check for changes
+    if (firstName !== user.firstName) {
+      user.firstName = firstName;
+    }
+
+    if (lastName !== user.lastName) {
+      user.lastName = lastName;
+    }
+
+    if (birthdate !== user.birthdate) {
+      user.birthdate = birthdate;
+    }
+
+    if (emailAddress !== user.emailAddress) {
+      user.emailAddress = emailAddress;
+    }
+
+    if (address !== user.address.fullAddress) {
+      const results = await getCoordinates(address);
+      const { lat, lng } = results[0].geometry;
+
+      user.address = {
+        fullAddress: address,
+        lat,
+        long: lng,
+      };
+    }
+
+    if (contactNumber !== user.contactNumber) {
+      user.contactNumber = contactNumber;
+    }
+
+    if (
+      !dietaryRestrictions.every((restriction) =>
+        user.dietaryRestrictions.includes(restriction)
+      )
+    ) {
+      user.dietaryRestrictions = dietaryRestrictions;
+    }
+
+    if (
+      !foodAllergies.every((allergy) => user.foodAllergies.includes(allergy))
+    ) {
+      user.foodAllergies = foodAllergies;
+    }
+
+    await user.save();
   } catch (err) {
     res.status(500).json({ msg: err });
   }

@@ -124,3 +124,5 @@ router.post("/logout", [auth], async (req, res) => {
     res.status(403).json({ msg: "Invalid token." });
   }
 });
+
+export default router;
