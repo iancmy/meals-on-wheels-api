@@ -24,39 +24,27 @@ export const checkUserExists = async (emailAddress) => {
 // Middleware to set user type
 export const getUserType = async (req, res, next) => {
   const { emailAddress } = req.body;
-  let userExists = false;
   let userType = null;
 
   try {
     // Check if user exist in any of the user collections
-    userExists = await Member.exists({ emailAddress });
-    if (userExists) {
-      userType = "member";
-    }
-
-    userExists = await Caregiver.exists({ emailAddress });
-    if (userExists) {
-      userType = "caregiver";
-    }
-
-    userExists = await Volunteer.exists({ emailAddress });
-    if (userExists) {
-      userType = "volunteer";
-    }
-
-    userExists = await Partner.exists({ emailAddress });
-    if (userExists) {
-      userType = "partner";
-    }
-
-    userExists = await Admin.exists({ emailAddress });
-    if (userExists) {
-      userType = "admin";
-    }
+    (await Member.exists({ emailAddress }))
+      ? (userType = "member")
+      : (await Caregiver.exists({ emailAddress }))
+      ? (userType = "caregiver")
+      : (await Volunteer.exists({ emailAddress }))
+      ? (userType = "volunteer")
+      : (await Partner.exists({ emailAddress }))
+      ? (userType = "partner")
+      : (await Admin.exists({ emailAddress }))
+      ? (userType = "admin")
+      : (userType = null);
 
     // Check if user exists
-    if (!userExists) {
-      return res.status(404).json({ msg: "User does not exist." });
+    if (!userType) {
+      return res.status(404).json({
+        msg: `User with an email address of ${emailAddress} does not exist.`,
+      });
     }
 
     // Set user type
@@ -70,7 +58,7 @@ export const getUserType = async (req, res, next) => {
 // Middleware to check if password is correct
 export const checkPassword = async (req, res, next) => {
   const { userType } = req;
-  const { password } = req.body;
+  const { emailAddress, password } = req.body;
 
   // Get user data
   let userData = null;
@@ -98,7 +86,9 @@ export const checkPassword = async (req, res, next) => {
     const isPasswordCorrect = await bcrypt.compare(password, userData.password);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ msg: "Invalid credentials." });
+      return res
+        .status(401)
+        .json({ msg: "Incorrect password. Please try again." });
     }
 
     req.userId = userData._id;
@@ -112,29 +102,14 @@ export const checkPassword = async (req, res, next) => {
 export const getUserData = async (req, res, next) => {
   const { userId } = req;
 
-  // Get user data
-  let userData = null;
-
   try {
-    switch (userType) {
-      case "member":
-        userData = await Member.findById(userId).select("-password");
-        break;
-      case "caregiver":
-        userData = await Caregiver.findById(userId)
-          .select("-password")
-          .populate("member");
-        break;
-      case "volunteer":
-        userData = await Volunteer.findById(userId).select("-password");
-        break;
-      case "partner":
-        userData = await Partner.findById(userId).select("-password");
-        break;
-      case "admin":
-        userData = await Admin.findById(userId).select("-password");
-        break;
-    }
+    // Get user data
+    const userData =
+      (await Member.findById(userId)) ??
+      (await Caregiver.findById(userId)) ??
+      (await Volunteer.findById(userId)) ??
+      (await Partner.findById(userId)) ??
+      (await Admin.findById(userId));
 
     // Set user data
     req.userData = userData;

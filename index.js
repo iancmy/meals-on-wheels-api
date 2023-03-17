@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 // Import routes
+import adminRoutes from "./controller/admin.js";
 import userRoutes from "./controller/user.js";
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use(cors({ origin: "*", credentials: true }));
 
 // Set up routes
+app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/location", locationRoutes);
 app.use("/api/member", memberRoutes);

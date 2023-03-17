@@ -57,9 +57,8 @@ router.get("/details", [auth, getUserData], async (req, res) => {
 });
 
 // Refresh access token
-router.post("/refresh", [auth], async (req, res) => {
+router.post("/refresh", async (req, res) => {
   const { refreshToken } = req.body;
-  const { userId } = req;
 
   // Check if refresh token exists
   if (!refreshToken) {
@@ -72,7 +71,6 @@ router.post("/refresh", [auth], async (req, res) => {
   try {
     const tokenExists = await RefreshToken.exists({
       refreshToken,
-      createdBy: userId,
     });
 
     if (!tokenExists) {
@@ -103,25 +101,17 @@ router.post("/refresh", [auth], async (req, res) => {
 // Logout
 router.post("/logout", [auth], async (req, res) => {
   // Get refresh token from request body
-  const { refreshToken } = req.body;
   const { userId } = req;
-
-  // Check if refresh token exists
-  if (!refreshToken) {
-    return res
-      .status(401)
-      .json({ msg: "No token present! Authorization denied" });
-  }
 
   try {
     // Delete refresh token from database
-    await RefreshToken.deleteOne({ refreshToken, createdBy: userId });
+    await RefreshToken.deleteMany({ createdBy: userId });
     // Delete access token cookie
     res.clearCookie("access_token");
 
     res.status(200).json({ msg: "Logout successful." });
   } catch (err) {
-    res.status(403).json({ msg: "Invalid token." });
+    res.status(500).json({ msg: err.message });
   }
 });
 

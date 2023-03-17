@@ -124,6 +124,10 @@ router.put("/update", [auth], async (req, res) => {
     }
 
     await user.save();
+
+    res.status(200).json({
+      msg: "Member profile updated successfully!",
+    });
   } catch (err) {
     res.status(500).json({ msg: err });
   }
