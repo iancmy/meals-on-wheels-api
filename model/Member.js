@@ -8,7 +8,7 @@ const memberSchema = new mongoose.Schema({
   lastName: String,
   birthdate: {
     type: Date,
-    required: true,
+    required: false,
   },
   emailAddress: {
     type: String,

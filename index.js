@@ -5,6 +5,10 @@ import dotenv from "dotenv";
 // Import routes
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
+import caregiverRoutes from "./controller/caregiver";
+import volunteerRoutes from "./controller/volunteer";
+import donationRoutes from "./controller/dontion";
+import partnerRoutes from "./controller/partner";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -18,6 +22,7 @@ const app = express();
 mongoose
   .connect(
     `mongodb+srv://${DB_USER}:${DB_PWD}@meals-on-wheels.jtyw6tx.mongodb.net/?retryWrites=true&w=majority`,
+    //`mongodb://localhost:27017/`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -36,6 +41,10 @@ app.use(express.json());
 // Set up routes
 app.use("/api/member", memberRoutes);
 app.use("/api/location", locationRoutes);
+app.use("/api/donation", donationRoutes);
+app.use("/api/partner", partnerRoutes);
+app.use("/api/caregiver", caregiverRoutes);
+app.use("/api/volunteer", volunteerRoutes);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
