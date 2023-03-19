@@ -5,7 +5,7 @@
 - [x] Connect to database
 - [x] Use JSON middleware for parsing request body
 - [x] Allow CORS and with credentials
-- [ ] Define all routes
+- [x] Define all routes
 
 ## Models
 
@@ -338,24 +338,24 @@
 
 ### Caregiver controller
 
-- [ ] Caregiver sign up
-  - [ ] Save dependent member details to Member collection
+- [x] Caregiver sign up
+  - [x] Save dependent member details to Member collection
     - make emailAddress, password, the same as Caregiver's
       - [x] Make sure in login to take this into account
         - check if email exist -> if user type member check if dependent -> if dependent use caregiver as user type -> proceed to login as normal
-  - [ ] Save caregiver details to Caregiver collection
-  - [ ] Reference memberId in caregiver "dependentMember" field
-- [ ] Update details
+  - [x] Save caregiver details to Caregiver collection
+  - [x] Reference memberId in caregiver "dependentMember" field
+- [x] Update details
 
 ### Volunteer controller
 
-- [ ] Volunteer sign up
-- [ ] Update details
+- [x] Volunteer sign up
+- [x] Update details
 
 ### Partner controller
 
-- [ ] Partner sign up
-- [ ] Update details
+- [x] Partner sign up
+- [x] Update details
 
 ### Admin controller
 
@@ -376,7 +376,7 @@
 
 ### Donation controller
 
-- [ ] New donation
+- [x] New donation
 
 ### Report controller
 

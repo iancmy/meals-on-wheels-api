@@ -262,6 +262,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
     switch (userType) {
       case "admin":
         for (const [key, value] of Object.entries(userDetails)) {
+          if (Array.isArray(user[key])) {
+            if (!user[key].every((item) => value.includes(item))) {
+              user[key] = value;
+            }
+            continue;
+          }
+
           if (user[key] !== value) {
             user[key] = value;
           }
@@ -270,6 +277,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         break;
       case "member":
         for (const [key, value] of Object.entries(userDetails)) {
+          if (Array.isArray(user[key])) {
+            if (!user[key].every((item) => value.includes(item))) {
+              user[key] = value;
+            }
+            continue;
+          }
+
           if (key === "address" && user[key].fullAddress !== value) {
             user[key].fullAddress = value;
             user[key].lat = lat;
@@ -295,6 +309,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         const member = await Member.findById(user.dependentMember);
 
         for (const [key, value] of Object.entries(userDetails.memberDetails)) {
+          if (Array.isArray(member[key])) {
+            if (!member[key].every((item) => value.includes(item))) {
+              member[key] = value;
+            }
+            continue;
+          }
+
           if (key === "address" && member[key].fullAddress !== value) {
             member[key].fullAddress = value;
             member[key].lat = memberLat;
@@ -310,6 +331,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         await member.save();
 
         for (const [key, value] of Object.entries(userDetails)) {
+          if (Array.isArray(user[key])) {
+            if (!user[key].every((item) => value.includes(item))) {
+              user[key] = value;
+            }
+            continue;
+          }
+
           if (key === "address" && user[key].fullAddress !== value) {
             user[key].fullAddress = value;
             user[key].lat = lat;
@@ -326,6 +354,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         break;
       case "volunteer":
         for (const [key, value] of Object.entries(userDetails)) {
+          if (Array.isArray(user[key])) {
+            if (!user[key].every((item) => value.includes(item))) {
+              user[key] = value;
+            }
+            continue;
+          }
+
           if (key === "address" && user[key].fullAddress !== value) {
             user[key].fullAddress = value;
             user[key].lat = lat;
@@ -342,6 +377,13 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         break;
       case "partner":
         for (const [key, value] of Object.entries(userDetails)) {
+          if (Array.isArray(user[key])) {
+            if (!user[key].every((item) => value.includes(item))) {
+              user[key] = value;
+            }
+            continue;
+          }
+
           if (key === "address" && user[key].fullAddress !== value) {
             user[key].fullAddress = value;
             user[key].lat = lat;

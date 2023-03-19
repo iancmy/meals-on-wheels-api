@@ -78,23 +78,23 @@ router.put("/update", [auth], async (req, res) => {
     } = req.body;
 
     // Check for changes
-    if (firstName !== user.firstName) {
+    if (firstName && firstName !== user.firstName) {
       user.firstName = firstName;
     }
 
-    if (lastName !== user.lastName) {
+    if (lastName && lastName !== user.lastName) {
       user.lastName = lastName;
     }
 
-    if (birthdate !== user.birthdate) {
+    if (birthdate && birthdate !== user.birthdate) {
       user.birthdate = birthdate;
     }
 
-    if (emailAddress !== user.emailAddress) {
+    if (emailAddress && emailAddress !== user.emailAddress) {
       user.emailAddress = emailAddress;
     }
 
-    if (address !== user.address.fullAddress) {
+    if (address && address !== user.address.fullAddress) {
       const results = await getCoordinates(address);
       const { lat, lng } = results[0].geometry;
 
@@ -105,7 +105,7 @@ router.put("/update", [auth], async (req, res) => {
       };
     }
 
-    if (contactNumber !== user.contactNumber) {
+    if (contactNumber && contactNumber !== user.contactNumber) {
       user.contactNumber = contactNumber;
     }
 

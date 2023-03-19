@@ -5,14 +5,15 @@ import dotenv from "dotenv";
 
 // Import routes
 import adminRoutes from "./controller/admin.js";
-import userRoutes from "./controller/user.js";
+import caregiverRoutes from "./controller/caregiver.js";
+import donationRoutes from "./controller/donation.js";
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
+import partnerRoutes from "./controller/partner.js";
+import publicRoutes from "./controller/public.js";
 import reportRoutes from "./controller/report.js";
-import caregiverRoutes from "./controller/caregiver";
-import volunteerRoutes from "./controller/volunteer";
-import donationRoutes from "./controller/dontion";
-import partnerRoutes from "./controller/partner";
+import userRoutes from "./controller/user.js";
+import volunteerRoutes from "./controller/volunteer.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -47,13 +48,14 @@ app.use(cors({ origin: "*", credentials: true }));
 
 // Set up routes
 app.use("/api/admin", adminRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/caregiver", caregiverRoutes);
+app.use("/api/donation", donationRoutes);
 app.use("/api/location", locationRoutes);
 app.use("/api/member", memberRoutes);
-app.use("/api/report", reportRoutes);
-app.use("/api/donation", donationRoutes);
 app.use("/api/partner", partnerRoutes);
-app.use("/api/caregiver", caregiverRoutes);
+app.use("/api/public", publicRoutes);
+app.use("/api/report", reportRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/volunteer", volunteerRoutes);
 
 app.listen(3000, () => {
