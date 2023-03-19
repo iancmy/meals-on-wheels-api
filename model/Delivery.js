@@ -1,8 +1,4 @@
 import mongoose from "mongoose";
-import Caregiver from "./Caregiver";
-import Member from "./Member";
-import Partner from "./Partner";
-import Volunteer from "./Volunteer";
 
 const deliverySchema = new mongoose.Schema({
   deliveryDate: {
@@ -11,51 +7,45 @@ const deliverySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: [
-      "Order Received",
-      "Food Preparation",
-      "Delivered",
-      "Cancelled",
-      "Rescheduled",
-      "No Show",
-    ],
+    enum: ["preparing", "cancelled", "rescheduled", "completed"],
     required: true,
   },
   dietaryRestrictions: {
     type: [String],
     default: [],
   },
-  member: {
-    type: Member,
-    default: "",
+  deliveredFor: {
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Member",
   },
   caregiver: {
-    type: Caregiver,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    default: null,
+    ref: "Caregiver",
   },
-  volunteerRider: {
-    type: Volunteer,
-    default: "",
+  deliveredBy: {
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Volunteer",
   },
   partner: {
-    type: Partner,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Partner",
   },
   comment: {
     type: String,
     default: "",
   },
-  validated: {
-    type: Boolean,
-    default: false,
-  },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 

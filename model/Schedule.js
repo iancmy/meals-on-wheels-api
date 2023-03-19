@@ -1,40 +1,62 @@
 import mongoose from "mongoose";
-import Admin from "./Admin";
-import Partner from "./Partner";
 
 const scheduleSchema = new mongoose.Schema({
   weekNumber: {
     type: Number,
     required: true,
+    min: 1,
+    max: 52,
   },
   days: {
-    type: [String],
-    required: true,
-    enum: [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
+    type: [
+      {
+        type: String,
+        enum: [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ],
+      },
     ],
+    required: true,
   },
   dietaryRestrictions: {
     type: [String],
     default: [],
   },
   partner: {
-    type: Partner,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Partner",
   },
   createdBy: {
-    type: Admin,
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Admin",
+  },
+  lastUpdatedBy: {
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Admin",
   },
   createdAt: {
     type: Date,
+    default: () => Date.now(),
+    immutable: true,
   },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now(),
+  },
+});
+
+scheduleSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);

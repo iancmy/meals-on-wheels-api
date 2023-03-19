@@ -1,45 +1,136 @@
 import express from "express";
 import Member from "../model/Member.js";
 
+import { auth } from "../service/auth.js";
+import { encryptPassword } from "../service/passwordEncrypt.js";
+import { checkUserExists } from "../service/user.js";
+import { getCoordinates } from "../service/location.js";
+
 const router = express.Router();
 
-// TODO: Add authentication middleware
-// For admins only
-router.get("/", async (req, res) => {
-  try {
-    const members = await Member.find();
-    res.status(200).json(members);
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.post("/signup", [encryptPassword], async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    birthdate,
+    emailAddress,
+    address,
+    contactNumber,
+    dietaryRestrictions,
+    foodAllergies,
+    password,
+  } = req.body;
 
-router.post("/signup", async (req, res) => {
+  // Check if user exists
+  const userExists = await checkUserExists(emailAddress);
+  if (userExists) {
+    return res.status(400).json({ msg: "User already exists." });
+  }
+
   try {
+    // Get the coordinates of the address
+    const results = await getCoordinates(address);
+    const { lat, lng } = results[0].geometry;
+
     await Member.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      birthdate: req.body.birthdate,
-      emailAddress: req.body.emailAddress,
+      firstName,
+      lastName,
+      birthdate,
+      emailAddress,
       address: {
-        fullAddress: req.body.address,
+        fullAddress: address,
+        lat,
+        long: lng,
       },
-      contactNumber: req.body.contactNumber,
-      dietaryRestrictions: req.body.dietaryRestrictions,
-      foodAllergies: req.body.foodAllergies,
-      password: req.body.password,
+      contactNumber,
+      dietaryRestrictions,
+      foodAllergies,
+      password,
+    });
+
+    res.status(201).json({
+      msg: "Member sign up successful!",
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ msg: err });
   }
-
-  res.status(201).json({
-    message: "Member created!",
-  });
 });
 
-// TODO: Login route
+router.put("/update", [auth], async (req, res) => {
+  const { userId } = req;
 
-// TODO: Update profile route
+  try {
+    const user = await Member.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found." });
+    }
+
+    const {
+      firstName,
+      lastName,
+      birthdate,
+      emailAddress,
+      address,
+      contactNumber,
+      dietaryRestrictions,
+      foodAllergies,
+    } = req.body;
+
+    // Check for changes
+    if (firstName !== user.firstName) {
+      user.firstName = firstName;
+    }
+
+    if (lastName !== user.lastName) {
+      user.lastName = lastName;
+    }
+
+    if (birthdate !== user.birthdate) {
+      user.birthdate = birthdate;
+    }
+
+    if (emailAddress !== user.emailAddress) {
+      user.emailAddress = emailAddress;
+    }
+
+    if (address !== user.address.fullAddress) {
+      const results = await getCoordinates(address);
+      const { lat, lng } = results[0].geometry;
+
+      user.address = {
+        fullAddress: address,
+        lat,
+        long: lng,
+      };
+    }
+
+    if (contactNumber !== user.contactNumber) {
+      user.contactNumber = contactNumber;
+    }
+
+    if (
+      !dietaryRestrictions.every((restriction) =>
+        user.dietaryRestrictions.includes(restriction)
+      )
+    ) {
+      user.dietaryRestrictions = dietaryRestrictions;
+    }
+
+    if (
+      !foodAllergies.every((allergy) => user.foodAllergies.includes(allergy))
+    ) {
+      user.foodAllergies = foodAllergies;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      msg: "Member profile updated successfully!",
+    });
+  } catch (err) {
+    res.status(500).json({ msg: err });
+  }
+});
 
 export default router;

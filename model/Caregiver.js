@@ -7,6 +7,7 @@ const caregiverSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
+    default: "",
   },
   emailAddress: {
     type: String,
@@ -47,14 +48,13 @@ const caregiverSchema = new mongoose.Schema({
     default: "",
   },
   dependentMember: {
-    type: mongoose.SchemaTypes.ObjectId, 
-    default: "",
+    type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "Member", 
+    ref: "Member",
   },
   relationshipToMember: {
     type: String,
-    default: "",
+    required: true,
   },
   validated: {
     type: Boolean,
@@ -62,11 +62,12 @@ const caregiverSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 

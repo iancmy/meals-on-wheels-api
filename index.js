@@ -1,10 +1,14 @@
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 // Import routes
+import adminRoutes from "./controller/admin.js";
+import userRoutes from "./controller/user.js";
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
+import reportRoutes from "./controller/report.js";
 import caregiverRoutes from "./controller/caregiver";
 import volunteerRoutes from "./controller/volunteer";
 import donationRoutes from "./controller/dontion";
@@ -38,9 +42,15 @@ mongoose
 // Middleware for parsing JSON data in request body
 app.use(express.json());
 
+// Allow cross-origin requests and allow credentials
+app.use(cors({ origin: "*", credentials: true }));
+
 // Set up routes
-app.use("/api/member", memberRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/location", locationRoutes);
+app.use("/api/member", memberRoutes);
+app.use("/api/report", reportRoutes);
 app.use("/api/donation", donationRoutes);
 app.use("/api/partner", partnerRoutes);
 app.use("/api/caregiver", caregiverRoutes);

@@ -7,7 +7,7 @@ const volunteerSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    required: true,
+    default: "",
   },
   emailAddress: {
     type: String,
@@ -48,12 +48,25 @@ const volunteerSchema = new mongoose.Schema({
     default: "",
   },
   daysAvailable: {
-    type: [Number],
-    default: [],
+    type: [
+      {
+        type: String,
+        enum: [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ],
+      },
+    ],
+    required: true,
   },
   serviceProvided: {
     type: String,
-    enum: ["Delivery", "Logistics"]
+    enum: ["delivery", "logistics"],
   },
   validated: {
     type: Boolean,
@@ -61,11 +74,12 @@ const volunteerSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: () => Date.now(),
     immutable: true,
   },
   updatedAt: {
     type: Date,
+    default: () => Date.now(),
   },
 });
 
