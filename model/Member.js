@@ -11,7 +11,7 @@ const memberSchema = new mongoose.Schema({
   },
   birthdate: {
     type: Date,
-    required: true,
+    required: false,
   },
   emailAddress: {
     type: String,
