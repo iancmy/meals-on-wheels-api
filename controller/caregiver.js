@@ -28,8 +28,8 @@ router.post("/signup", [encryptPassword], async (req, res) => {
 
   try {
     const memberAddressCoords = await getCoordinates(address);
-    const memberLat = memberAddressCoords[0].geometry.location.lat;
-    const memberLong = memberAddressCoords[0].geometry.location.lng;
+    const memberLat = memberAddressCoords[0].geometry.lat;
+    const memberLong = memberAddressCoords[0].geometry.lng;
 
     const member = await Member.create({
       firstName: memberDetails.firstName,
@@ -49,8 +49,8 @@ router.post("/signup", [encryptPassword], async (req, res) => {
     });
 
     const caregiverAddressCoords = await getCoordinates(address);
-    const caregiverLat = caregiverAddressCoords[0].geometry.location.lat;
-    const caregiverLong = caregiverAddressCoords[0].geometry.location.lng;
+    const caregiverLat = caregiverAddressCoords[0].geometry.lat;
+    const caregiverLong = caregiverAddressCoords[0].geometry.lng;
 
     await Caregiver.create({
       firstName,
@@ -111,8 +111,8 @@ router.put("/update", [auth], async (req, res) => {
 
     if (address && address !== caregiver.address.fullAddress) {
       const addressCoords = await getCoordinates(address);
-      const lat = addressCoords[0].geometry.location.lat;
-      const long = addressCoords[0].geometry.location.lng;
+      const lat = addressCoords[0].geometry.lat;
+      const long = addressCoords[0].geometry.lng;
 
       caregiver.address = {
         fullAddress: address,
@@ -172,8 +172,8 @@ router.put("/update", [auth], async (req, res) => {
         memberDetails.address !== member.address.fullAddress
       ) {
         const addressCoords = await getCoordinates(memberDetails.address);
-        const lat = addressCoords[0].geometry.location.lat;
-        const long = addressCoords[0].geometry.location.lng;
+        const lat = addressCoords[0].geometry.lat;
+        const long = addressCoords[0].geometry.lng;
 
         member.address = {
           fullAddress: memberDetails.address,

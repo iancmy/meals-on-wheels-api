@@ -68,7 +68,7 @@ router.get("/volunteer", [auth, checkAdmin], async (req, res) => {
 });
 
 // Get member and caregiver reports
-router.get("/member", [auth, checkAdmin], async (req, res) => {
+router.get("/beneficiary", [auth, checkAdmin], async (req, res) => {
   const { startDate, endDate } = req.query;
 
   try {

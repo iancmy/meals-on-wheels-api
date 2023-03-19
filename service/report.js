@@ -1,6 +1,7 @@
 import Member from "../model/Member.js";
 import Volunteer from "../model/Volunteer.js";
 import Donation from "../model/Donation.js";
+import Caregiver from "../model/Caregiver.js";
 
 function getOptions(options) {
   const { startDate, endDate } = options;
@@ -223,18 +224,18 @@ export const getVolunteerRetention = async () => {
 
 export const getTotalBeneficiaries = async (options) => {
   try {
-    const totalMembers = await Member.countDocuments({
+    const totalValidatedMembers = await Member.countDocuments({
       validated: true,
     });
 
-    const totalCaregivers = await Caregiver.countDocuments({
+    const totalValidatedCaregivers = await Caregiver.countDocuments({
       validated: true,
     });
 
     return {
-      totalMembers,
-      totalCaregivers,
-      totalBeneficiaries: totalMembers - totalCaregivers,
+      totalValidatedMembers,
+      totalValidatedCaregivers,
+      totalBeneficiaries: totalValidatedMembers - totalValidatedCaregivers,
     };
   } catch (err) {
     console.log("Error in getTotalMembersAndCaregivers service (report.js)");

@@ -12,6 +12,8 @@ import {
   checkLogistics,
   checkSuperAdmin,
 } from "../service/admin.js";
+import { checkUserExists } from "../service/user.js";
+import { getCoordinates } from "../service/location.js";
 import Schedule from "../model/Schedule.js";
 import Delivery from "../model/Delivery.js";
 
@@ -126,86 +128,148 @@ router.post(
     const userType = req.query.type;
     const userDetails = req.body;
 
+    // Check if user exists
+    const userExists = await checkUserExists(userDetails.emailAddress);
+    if (userExists) {
+      return res.status(400).json({ msg: "User already exists." });
+    }
+
     try {
       let lat, long;
 
       if (userDetails?.address) {
-        const results = await getCoordinates(userDetails.address);
-        lat = results[0].geometry.location.lat;
-        long = results[0].geometry.location.lng;
+        try {
+          const results = await getCoordinates(userDetails.address);
+
+          lat = results[0].geometry.lat;
+          long = results[0].geometry.lng;
+        } catch (err) {
+          return res
+            .status(400)
+            .json({ msg: "Cannot find coordinates of address." });
+        }
       }
 
       switch (userType) {
         case "admin":
-          await Admin.create(userDetails);
+          try {
+            await Admin.create(userDetails);
+
+            res.status(201).json({
+              msg: "Admin created successfully!",
+            });
+          } catch (err) {
+            res.status(500).json({ msg: err });
+          }
           break;
         case "member":
-          await Member.create({
-            ...userDetails,
-            address: {
-              fullAddress: userDetails.address,
-              lat,
-              long,
-            },
-          });
+          try {
+            await Member.create({
+              _id:
+                new Date().getTime().toString() +
+                Math.floor(Math.random() * 1000).toString(),
+              ...userDetails,
+              address: {
+                fullAddress: userDetails.address,
+                lat,
+                long,
+              },
+            });
+
+            res.status(201).json({
+              msg: "Member created successfully!",
+            });
+          } catch (err) {
+            res.status(500).json({ msg: err });
+          }
+
           break;
         case "caregiver":
-          const memberAddressCoords = await getCoordinates(
-            userDetails.memberDetails.address
-          );
+          try {
+            const memberAddressCoords = await getCoordinates(
+              userDetails.memberDetails.address
+            );
 
-          const memberLat = memberAddressCoords[0].geometry.location.lat;
-          const memberLong = memberAddressCoords[0].geometry.location.lng;
+            const memberLat = memberAddressCoords[0].geometry.lat;
+            const memberLong = memberAddressCoords[0].geometry.lng;
 
-          const member = Member.create({
-            ...userDetails.memberDetails,
-            address: {
-              fullAddress: userDetails.member.address,
-              memberLat,
-              memberLong,
-            },
-            emailAddress: userDetails.emailAddress,
-            password: userDetails.password,
-          });
+            const member = await Member.create({
+              ...userDetails.memberDetails,
+              address: {
+                fullAddress: userDetails.memberDetails.address,
+                lat: memberLat,
+                long: memberLong,
+              },
+              emailAddress: userDetails.emailAddress,
+              password: userDetails.password,
+            });
 
-          await Caregiver.create({
-            ...userDetails,
-            dependentMember: member._id,
-            address: {
-              fullAddress: userDetails.address,
-              lat,
-              long,
-            },
-          });
+            try {
+              await Caregiver.create({
+                ...userDetails,
+                dependentMember: member._id,
+                address: {
+                  fullAddress: userDetails.address,
+                  lat,
+                  long,
+                },
+              });
+
+              res.status(201).json({
+                msg: "Caregiver created successfully!",
+              });
+            } catch (err) {
+              // Delete member if caregiver creation fails
+              await Member.findByIdAndDelete(member._id);
+
+              res.status(500).json({ msg: err });
+            }
+          } catch (err) {
+            res.status(500).json({ msg: err });
+          }
 
           break;
         case "volunteer":
-          await Volunteer.create({
-            ...userDetails,
-            address: {
-              fullAddress: userDetails.address,
-              lat,
-              long,
-            },
-          });
+          try {
+            await Volunteer.create({
+              ...userDetails,
+              address: {
+                fullAddress: userDetails.address,
+                lat,
+                long,
+              },
+            });
+
+            res.status(201).json({
+              msg: "Volunteer created successfully!",
+            });
+          } catch (err) {
+            res.status(500).json({ msg: err });
+          }
+
           break;
         case "partner":
-          await Partner.create({
-            ...userDetails,
-            address: {
-              fullAddress: userDetails.address,
-              lat,
-              long,
-            },
-          });
+          try {
+            await Partner.create({
+              ...userDetails,
+              address: {
+                fullAddress: userDetails.address,
+                lat,
+                long,
+              },
+            });
+
+            res.status(201).json({
+              msg: "Partner created successfully!",
+            });
+          } catch (err) {
+            res.status(500).json({ msg: err });
+          }
+
           break;
         default:
           return res.status(400).json({ msg: "Invalid user type." });
       }
-
-      res.status(201).json({
-        msg: "User created successfully!",
-      });
     } catch (err) {
       res.status(500).json({ msg: err });
     }
@@ -238,8 +302,8 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
 
     if (userDetails?.address) {
       const results = await getCoordinates(userDetails.address);
-      lat = results[0].geometry.location.lat;
-      long = results[0].geometry.location.lng;
+      lat = results[0].geometry.lat;
+      long = results[0].geometry.lng;
     }
 
     const user =
@@ -299,13 +363,6 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         await user.save();
         break;
       case "caregiver":
-        const memberAddressCoords = await getCoordinates(
-          userDetails.memberDetails.address
-        );
-
-        const memberLat = memberAddressCoords[0].geometry.location.lat;
-        const memberLong = memberAddressCoords[0].geometry.location.lng;
-
         const member = await Member.findById(user.dependentMember);
 
         for (const [key, value] of Object.entries(userDetails.memberDetails)) {
@@ -317,9 +374,19 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
           }
 
           if (key === "address" && member[key].fullAddress !== value) {
-            member[key].fullAddress = value;
-            member[key].lat = memberLat;
-            member[key].long = memberLong;
+            const memberAddressCoords = await getCoordinates(value);
+
+            const memberLat = memberAddressCoords[0].geometry.lat;
+            const memberLong = memberAddressCoords[0].geometry.lng;
+
+            const address = {
+              fullAddress: value,
+              lat: memberLat,
+              long: memberLong,
+            };
+
+            member[key] = address;
+
             continue;
           }
 
@@ -351,6 +418,7 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         }
 
         await user.save();
+
         break;
       case "volunteer":
         for (const [key, value] of Object.entries(userDetails)) {
@@ -401,6 +469,8 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
       default:
         return res.status(400).json({ msg: "Invalid user type." });
     }
+
+    res.status(200).json({ msg: "User updated successfully." });
   } catch (err) {
     res.status(500).json({ msg: err });
   }
@@ -474,7 +544,9 @@ router.post("/user/validate/:id", [auth, checkAdmin], async (req, res) => {
       return res.status(400).json({ msg: "User already validated." });
     }
 
-    if (userType === "caregiver") {
+    const isCaregiver = await Caregiver.exists({ _id: id });
+
+    if (isCaregiver) {
       const member = await Member.findById(user.dependentMember);
 
       if (!member) {
@@ -516,12 +588,12 @@ router.post("/user/invalidate/:id", [auth, checkAdmin], async (req, res) => {
       return res.status(400).json({ msg: "User already invalidated." });
     }
 
-    if (userType === "caregiver") {
+    const isCaregiver = await Caregiver.exists({ _id: id });
+    if (isCaregiver) {
       const member = await Member.findById(user.dependentMember);
 
       if (!member) {
         return res
-
           .status(404)
           .json({ msg: "Dependent member of caregiver not found." });
       }
@@ -631,7 +703,11 @@ router.delete("/schedule/:id", [auth, checkLogistics], async (req, res) => {
 // Get deliveries
 router.get("/deliveries", [auth, checkLogistics], async (req, res) => {
   try {
-    const deliveries = await Delivery.find();
+    const deliveries = await Delivery.find()
+      .populate("partner", "-password")
+      .populate("deliveredBy", "-password")
+      .populate("deliveredFor", "-password")
+      .populate("caregiver", "-password");
 
     res.status(200).json(deliveries);
   } catch (err) {
@@ -644,7 +720,11 @@ router.get("/delivery/:id", [auth, checkLogistics], async (req, res) => {
   const { id } = req.params;
 
   try {
-    const delivery = await Delivery.findById(id);
+    const delivery = await Delivery.findById(id)
+      .populate("partner", "-password")
+      .populate("deliveredBy", "-password")
+      .populate("deliveredFor", "-password")
+      .populate("caregiver", "-password");
 
     if (!delivery) {
       return res.status(404).json({ msg: "Delivery not found." });
@@ -662,7 +742,7 @@ router.post("/delivery", [auth, checkLogistics], async (req, res) => {
     deliveryDate,
     dietaryRestrictions,
     deliveredFor,
-    caregiver,
+    caregiver = null,
     deliveredBy,
     partner,
     comment,
@@ -670,6 +750,7 @@ router.post("/delivery", [auth, checkLogistics], async (req, res) => {
 
   try {
     await Delivery.create({
+      status: "pending",
       deliveryDate,
       dietaryRestrictions,
       deliveredFor,

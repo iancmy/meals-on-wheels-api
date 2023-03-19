@@ -26,8 +26,8 @@ router.post("/signup", [encryptPassword], async (req, res) => {
 
   try {
     const results = await getCoordinates(address);
-    const lat = results[0].geometry.location.lat;
-    const long = results[0].geometry.location.lng;
+    const lat = results[0].geometry.lat;
+    const long = results[0].geometry.lng;
 
     await Partner.create({
       businessName,
@@ -84,8 +84,8 @@ router.put("/update", [auth], async (req, res) => {
 
     if (address && address !== partner.address.fullAddress) {
       const results = await getCoordinates(address);
-      const lat = results[0].geometry.location.lat;
-      const long = results[0].geometry.location.lng;
+      const lat = results[0].geometry.lat;
+      const long = results[0].geometry.lng;
 
       partner.address.fullAddress = address;
       partner.address.lat = lat;

@@ -7,7 +7,7 @@ const deliverySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["preparing", "cancelled", "rescheduled", "completed"],
+    enum: ["pending", "preparing", "cancelled", "rescheduled", "completed"],
     required: true,
   },
   dietaryRestrictions: {

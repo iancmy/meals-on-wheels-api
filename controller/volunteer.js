@@ -26,9 +26,9 @@ router.post("/signup", [encryptPassword], async (req, res) => {
   }
 
   try {
-    const results = getCoordinates(address);
-    const lat = results[0].geometry.location.lat;
-    const long = results[0].geometry.location.lng;
+    const results = await getCoordinates(address);
+    const lat = results[0].geometry.lat;
+    const long = results[0].geometry.lng;
 
     await Volunteer.create({
       firstName,
@@ -69,7 +69,7 @@ router.put("/update", [auth], async (req, res) => {
   } = req.body;
 
   try {
-    const volunteer = Volunteer.findById(userId);
+    const volunteer = await Volunteer.findById(userId);
 
     if (!volunteer) {
       res.status(404).json({
@@ -91,8 +91,8 @@ router.put("/update", [auth], async (req, res) => {
 
     if (address && address !== volunteer.address.fullAddress) {
       const results = getCoordinates(address);
-      const lat = results[0].geometry.location.lat;
-      const long = results[0].geometry.location.lng;
+      const lat = results[0].geometry.lat;
+      const long = results[0].geometry.lng;
 
       volunteer.address = {
         fullAddress: address,
