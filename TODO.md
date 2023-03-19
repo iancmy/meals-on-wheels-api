@@ -333,15 +333,15 @@
 
 ### Member controller
 
-- [ ] Member sign up
-- [ ] Update details
+- [x] Member sign up
+- [x] Update details
 
 ### Caregiver controller
 
 - [ ] Caregiver sign up
   - [ ] Save dependent member details to Member collection
     - make emailAddress, password, the same as Caregiver's
-      - [ ] Make sure in login to take this into account
+      - [x] Make sure in login to take this into account
         - check if email exist -> if user type member check if dependent -> if dependent use caregiver as user type -> proceed to login as normal
   - [ ] Save caregiver details to Caregiver collection
   - [ ] Reference memberId in caregiver "dependentMember" field
@@ -359,17 +359,20 @@
 
 ### Admin controller
 
-- [ ] Manage roles
-- [ ] Get users
-- [ ] Validate user
-- [ ] Create new users
-  - [ ] Admin
-  - [ ] Member
-  - [ ] Caregiver
-  - [ ] Volunteer
-  - [ ] Partner
-- [ ] Schedules CRUD
-- [ ] Delivery CRUD
+- [x] Manage roles
+- [x] Get users
+- [x] Validate user
+- [x] Invalidate user
+- [x] Create new users
+  - [x] Admin
+  - [x] Member
+  - [x] Caregiver
+  - [x] Volunteer
+  - [x] Partner
+- [x] Update user
+- [x] Delete user
+- [x] Schedules CRUD
+- [x] Delivery CRUD
 
 ### Donation controller
 
@@ -377,16 +380,16 @@
 
 ### Report controller
 
-- [ ] Get reports
-  - [ ] Donations
+- [x] Get reports
+  - [x] Donations
     - Total amount within a period of time
     - Separate by category
     - Top donations
     - Top donors
-  - [ ] Volunteers
+  - [x] Volunteers
     - Total number of volunteers
     - Volunteer retention
-  - [ ] Member & Caregivers
+  - [x] Member & Caregivers
     - Number of meals received (Hot and Frozen)
     - Validation rate
     - Member / Caregiver ratio
@@ -418,5 +421,5 @@
 
 ## Testing
 
-- [ ] Test authentication
-- [ ] Test location API
+- [x] Test authentication
+- [x] Test location API

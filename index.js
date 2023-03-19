@@ -8,6 +8,7 @@ import adminRoutes from "./controller/admin.js";
 import userRoutes from "./controller/user.js";
 import locationRoutes from "./controller/location.js";
 import memberRoutes from "./controller/member.js";
+import reportRoutes from "./controller/report.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -44,6 +45,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/location", locationRoutes);
 app.use("/api/member", memberRoutes);
+app.use("/api/report", reportRoutes);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

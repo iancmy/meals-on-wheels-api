@@ -38,6 +38,11 @@ const scheduleSchema = new mongoose.Schema({
     required: true,
     ref: "Admin",
   },
+  lastUpdatedBy: {
+    type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "Admin",
+  },
   createdAt: {
     type: Date,
     default: () => Date.now(),

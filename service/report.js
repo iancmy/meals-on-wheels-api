@@ -1,6 +1,6 @@
 import Member from "../model/Member.js";
 import Volunteer from "../model/Volunteer.js";
-import Donation from "../models/Donation.js";
+import Donation from "../model/Donation.js";
 
 function getOptions(options) {
   const { startDate, endDate } = options;

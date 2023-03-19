@@ -47,6 +47,15 @@ export const getUserType = async (req, res, next) => {
       });
     }
 
+    if (userType === "member") {
+      // Check if dependent
+      const isDependent = await Caregiver.exists({ emailAddress });
+
+      if (isDependent) {
+        userType = "caregiver";
+      }
+    }
+
     // Set user type
     req.userType = userType;
     next();
