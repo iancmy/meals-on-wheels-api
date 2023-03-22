@@ -25,7 +25,7 @@ router.post("/donate", async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      message: "Donation created successfully",
+      msg: "Donation created successfully",
       receipt: donation,
     });
   } catch (err) {

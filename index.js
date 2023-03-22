@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 // Import routes
 import adminRoutes from "./controller/admin.js";
@@ -44,7 +45,15 @@ mongoose
 app.use(express.json());
 
 // Allow cross-origin requests and allow credentials
-app.use(cors({ origin: "*", credentials: true }));
+app.use(
+  cors({
+    origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
+    credentials: true,
+  })
+);
+
+// Middleware for parsing cookies
+app.use(cookieParser());
 
 // Set up routes
 app.use("/api/admin", adminRoutes);

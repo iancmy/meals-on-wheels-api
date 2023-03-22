@@ -15,10 +15,10 @@ export const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, REFRESH_TOKEN_SECRET);
 };
 
-export const auth = (req, res, next) => {
+export const auth = async (req, res, next) => {
   // Get token from authorization header
   const token =
-    req.headers?.authorization?.split(" ")[1] || req.cookies?.["access-token"];
+    req.cookies?.["access_token"] ?? req.headers?.authorization?.split(" ")[1];
 
   // Check if token exists
   if (!token) {

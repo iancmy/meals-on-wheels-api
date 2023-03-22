@@ -363,40 +363,6 @@ router.put("/user/:id", [auth, checkSuperAdmin], async (req, res) => {
         await user.save();
         break;
       case "caregiver":
-        const member = await Member.findById(user.dependentMember);
-
-        for (const [key, value] of Object.entries(userDetails.memberDetails)) {
-          if (Array.isArray(member[key])) {
-            if (!member[key].every((item) => value.includes(item))) {
-              member[key] = value;
-            }
-            continue;
-          }
-
-          if (key === "address" && member[key].fullAddress !== value) {
-            const memberAddressCoords = await getCoordinates(value);
-
-            const memberLat = memberAddressCoords[0].geometry.lat;
-            const memberLong = memberAddressCoords[0].geometry.lng;
-
-            const address = {
-              fullAddress: value,
-              lat: memberLat,
-              long: memberLong,
-            };
-
-            member[key] = address;
-
-            continue;
-          }
-
-          if (member[key] !== value) {
-            member[key] = value;
-          }
-        }
-
-        await member.save();
-
         for (const [key, value] of Object.entries(userDetails)) {
           if (Array.isArray(user[key])) {
             if (!user[key].every((item) => value.includes(item))) {

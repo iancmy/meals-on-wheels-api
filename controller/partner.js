@@ -44,7 +44,7 @@ router.post("/signup", [encryptPassword], async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Partner sign up successful!",
+      msg: "Partner sign up successful!",
     });
   } catch (err) {
     res.status(500).json({
@@ -96,7 +96,10 @@ router.put("/update", [auth], async (req, res) => {
       partner.contactNumber = contactNumber;
     }
 
-    if (!daysAvailable.every((day) => partner.daysAvailable.includes(day))) {
+    if (
+      !partner.daysAvailable.every((day) => daysAvailable.includes(day)) ||
+      !daysAvailable.every((day) => partner.daysAvailable.includes(day))
+    ) {
       partner.daysAvailable = daysAvailable;
     }
 

@@ -46,7 +46,7 @@ router.post("/signup", [encryptPassword], async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Volunteer sign up successful!",
+      msg: "Volunteer sign up successful!",
     });
   } catch (err) {
     res.status(500).json({
@@ -73,7 +73,7 @@ router.put("/update", [auth], async (req, res) => {
 
     if (!volunteer) {
       res.status(404).json({
-        message: "Volunteer not found!",
+        msg: "Volunteer not found!",
       });
     }
 
@@ -105,7 +105,10 @@ router.put("/update", [auth], async (req, res) => {
       volunteer.contactNumber = contactNumber;
     }
 
-    if (!daysAvailable.every((day) => volunteer.daysAvailable.includes(day))) {
+    if (
+      !volunteer.daysAvailable.every((day) => daysAvailable.includes(day)) ||
+      !daysAvailable.every((day) => volunteer.daysAvailable.includes(day))
+    ) {
       volunteer.daysAvailable = daysAvailable;
     }
 
@@ -116,7 +119,7 @@ router.put("/update", [auth], async (req, res) => {
     await volunteer.save();
 
     res.status(200).json({
-      message: "Volunteer updated successfully!",
+      msg: "Volunteer updated successfully!",
     });
   } catch (err) {
     res.status(500).json({

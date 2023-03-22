@@ -110,6 +110,9 @@ router.put("/update", [auth], async (req, res) => {
     }
 
     if (
+      !user.dietaryRestrictions.every((restriction) =>
+        dietaryRestrictions.includes(restriction)
+      ) ||
       !dietaryRestrictions.every((restriction) =>
         user.dietaryRestrictions.includes(restriction)
       )
@@ -118,6 +121,7 @@ router.put("/update", [auth], async (req, res) => {
     }
 
     if (
+      !user.foodAllergies.every((allergy) => foodAllergies.includes(allergy)) ||
       !foodAllergies.every((allergy) => user.foodAllergies.includes(allergy))
     ) {
       user.foodAllergies = foodAllergies;

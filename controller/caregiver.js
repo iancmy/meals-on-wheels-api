@@ -68,7 +68,7 @@ router.post("/signup", [encryptPassword], async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Caregiver sign up successful!",
+      msg: "Caregiver sign up successful!",
     });
   } catch (err) {
     res.status(500).json({
@@ -190,6 +190,9 @@ router.put("/update", [auth], async (req, res) => {
       }
 
       if (
+        !member.dietaryRestrictions.every((restriction) =>
+          memberDetails.dietaryRestrictions.includes(restriction)
+        ) ||
         !memberDetails.dietaryRestrictions.every((restriction) =>
           member.dietaryRestrictions.includes(restriction)
         )
@@ -198,6 +201,9 @@ router.put("/update", [auth], async (req, res) => {
       }
 
       if (
+        !member.foodAllergies.every((allergy) =>
+          memberDetails.foodAllergies.includes(allergy)
+        ) ||
         !memberDetails.foodAllergies.every((allergy) =>
           member.foodAllergies.includes(allergy)
         )
@@ -211,7 +217,7 @@ router.put("/update", [auth], async (req, res) => {
     await caregiver.save();
 
     res.status(200).json({
-      message: "Caregiver updated successfully!",
+      msg: "Caregiver updated successfully!",
     });
   } catch (err) {
     res.status(500).json({

@@ -107,7 +107,11 @@ router.post("/logout", [auth], async (req, res) => {
     // Delete refresh token from database
     await RefreshToken.deleteMany({ createdBy: userId });
     // Delete access token cookie
-    res.clearCookie("access_token");
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
 
     res.status(200).json({ msg: "Logout successful." });
   } catch (err) {

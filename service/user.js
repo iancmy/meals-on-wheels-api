@@ -112,16 +112,32 @@ export const getUserData = async (req, res, next) => {
   const { userId } = req;
 
   try {
+    const userType = (await Member.exists({ _id: userId }))
+      ? "member"
+      : (await Caregiver.exists({ _id: userId }))
+      ? "caregiver"
+      : (await Volunteer.exists({ _id: userId }))
+      ? "volunteer"
+      : (await Partner.exists({ _id: userId }))
+      ? "partner"
+      : (await Admin.exists({ _id: userId }))
+      ? "admin"
+      : null;
+
+    if (!userType) {
+      return res.status(404).json({ msg: "User does not exist." });
+    }
+
     // Get user data
     const userData =
       (await Member.findById(userId)) ??
-      (await Caregiver.findById(userId)) ??
+      (await Caregiver.findById(userId).populate("dependentMember")) ??
       (await Volunteer.findById(userId)) ??
       (await Partner.findById(userId)) ??
       (await Admin.findById(userId));
 
     // Set user data
-    req.userData = userData;
+    req.userData = { ...userData._doc, userType };
     next();
   } catch (err) {
     res.status(500).json({ msg: err.message });
