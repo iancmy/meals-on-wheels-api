@@ -40,19 +40,19 @@ and donor management.
 ## 🔧 Installation & Setup
 
 1. **Clone the repository**:
-   ```bash
-   git clone [https://github.com/iancmy/meals-on-wheels-api.git](https://github.com/iancmy/meals-on-wheels-api.git)
+   ```sh
+   git clone https://github.com/iancmy/meals-on-wheels-api.git
    cd meals-on-wheels-api
    ```
 
 2. **Install dependencies**:
-   ```bash
+   ```sh
    npm install
    ```
 
 3. **Environment Configuration**: Create a `.env` file in the root directory and
    add the following variables:
-   ```env
+   ```sh
    PORT=3000
    DB_USER=your_mongodb_user
    DB_PWD=your_mongodb_password
