@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import Admin from "../model/Admin.js";
 import Caregiver from "../model/Caregiver.js";

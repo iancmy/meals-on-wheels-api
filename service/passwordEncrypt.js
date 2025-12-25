@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // Middleware for encrypting password
 export const encryptPassword = async (req, res, next) => {
